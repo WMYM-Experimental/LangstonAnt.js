@@ -1,27 +1,21 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = 500;
-canvas.height = 500;
+canvas.width = 600;
+canvas.height = 600;
 
 class Ant {
-    constructor(x, y, direction) {
+    constructor(x, y, direction, color) {
         this.x = x;
         this.y = y;
         this.direction = direction;
+        this.color = color;
     }
 
     // At a white square, turn 90° clockwise, flip the color of the square, move forward one unit
     // At a black square, turn 90° counter - clockwise, flip the color of the square, move forward one unit
 
     // right = 0, left = 1, up = 2, down = 3
-
-    // draw() {
-    //     ctx.fillStyle = "black";
-    //     ctx.beginPath()
-    //     ctx.fillRect(this.x, this.y, 1, 1);
-    //     ctx.closePath();
-    // }
 
     move() {
         if (this.direction == 0) {
@@ -60,12 +54,7 @@ class Ant {
     }
 
     check() {
-        if (
-            this.x >= 0 &&
-            this.x <= canvas.width - 20 &&
-            this.y >= 0 &&
-            this.y <= canvas.height - 20
-        ) {
+        if (this.x >= 0 && this.x < 60 && this.y >= 0 && this.y < 60) {
             return true;
         }
         return false;
@@ -109,39 +98,31 @@ const drawMatrix = (matrix) => {
     });
 };
 
-const matrix = makeMatrix(50, 50);
-const ant = new Ant(10, 20, 0);
+const matrix = makeMatrix(60, 60);
 
-drawMatrix(matrix);
+const ant = new Ant(
+    getRandomInt(1, matrix.length - 1),
+    getRandomInt(1, matrix.length - 1),
+    0
+);
+
 const animate = () => {
+    if (!ant.check()) {
+        ant.x = getRandomInt(1, matrix.length - 1);
+        ant.y = getRandomInt(1, matrix.length - 1);
+    }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (ant.check()) {
-        const flag = matrix[ant.x][ant.y];
-        if (flag == 0) {
-            ant.turn(flag);
-            matrix[ant.x][ant.y] = 1;
-            ant.move();
-        } else if (flag == 1) {
-            ant.turn(flag);
-            matrix[ant.x][ant.y] = 0;
-            ant.move();
-        }
-
-        drawMatrix(matrix);
-        requestAnimationFrame(animate);
-    } else {
-        init();
+    const flag = matrix[ant.x][ant.y];
+    if (flag == 0) {
+        ant.turn(flag);
+        matrix[ant.x][ant.y] = 1;
+    } else if (flag == 1) {
+        ant.turn(flag);
+        matrix[ant.x][ant.y] = 0;
     }
-};
-
-const init = () => {
-    for (let i = 0; i < array.length; i++) {
-        for (let j = 0; j < array.length; j++) {
-            matrix[i][j] = 0;
-        }
-    }
-    ant.x = 30;
-    ant.y = 20;
+    ant.move();
+    drawMatrix(matrix);
+    requestAnimationFrame(animate);
 };
 
 animate();
