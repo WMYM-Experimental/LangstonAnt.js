@@ -1,30 +1,43 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width = 500;
+canvas.height = 500;
 
 const makeMatrix = (rows, cols) => {
     const matrix = [];
     for (let i = 0; i < rows; i++) {
-        //figuring out how to make a row
-        matrix.push(new Array(cols).fill(i % 2 === 0 ? 1 : 0));
+        matrix.push(new Array(cols).fill(0));
     }
     return matrix;
 };
 
+
 const drawMatrix = (matrix) => {
     matrix.forEach((row, i) => {
         row.forEach((col, j) => {
-            ctx.beginPath();
             ctx.fillStyle = col === 1 ? "black" : "white";
-            ctx.fillRect(i * 10, j * 10, 10, 10);
+            ctx.beginPath();
+            ctx.rect(i * 10, j * 10, 10, 10);
+            ctx.stroke();
+            ctx.closePath();
+            if (col === 1) {
+                ctx.fillRect(i * 10, j * 10, 10, 10);
+                ctx.fill()
+            }
         });
     });
 };
 
-const matrix = makeMatrix(canvas.width, canvas.height);
+const matrix = makeMatrix(50, 50);
 
+for (let i = 0; i < matrix.length; i++) {
+    for (let j = 0; j < matrix[i].length; j++) {
+        matrix[i][j] = Math.floor(Math.random() * 2);
+    }
+}
+
+console.log(matrix)
 const animate = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawMatrix(matrix);
