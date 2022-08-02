@@ -116,7 +116,7 @@ const animate = () => {
     if (flag == 0) {
         ant.turn(flag);
         matrix[ant.x][ant.y] = 1;
-    } else if (flag == 1) {
+    } else {
         ant.turn(flag);
         matrix[ant.x][ant.y] = 0;
     }
